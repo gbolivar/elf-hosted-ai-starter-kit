@@ -1,9 +1,9 @@
-volumes:
-  n8n_storage:
-  n8n_data:
-  postgres_storage:
-  ollama_storage:
-  qdrant_storage:
+#volumes:
+#  n8n_storage:
+#  n8n_data:
+#  postgres_storage:
+#  ollama_storage:
+#  qdrant_storage:
 
 networks:
   demo:
@@ -32,14 +32,14 @@ x-ollama: &service-ollama
   ports:
     - 11434:11434
   volumes:
-    - ollama_storage:/root/.ollama
+    - ./volumes/ollama_storage:/root/.ollama
 
 x-init-ollama: &init-ollama
   image: ollama/ollama:latest
   networks: ["demo"]
   container_name: ollama-pull-llama
   volumes:
-    - ollama_storage:/root/.ollama
+    - ./volumes/ollama_storage:/root/.ollama
   entrypoint: /bin/sh
   environment:
     - OLLAMA_HOST=ollama:11434
@@ -60,7 +60,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres_storage:/var/lib/postgresql/data
+      - ./volumes/postgres_storage:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -96,7 +96,7 @@ services:
       # - n8n_storage:/home/node/.n8n
       - ./n8n/demo-data:/demo-data
       - ./shared:/data/shared
-      - n8n_data:/home/node/.n8n
+      - ./volumes/n8n_data:/home/node/.n8n
     depends_on:
       postgres:
         condition: service_healthy
@@ -112,7 +112,7 @@ services:
     ports:
       - 6333:6333
     volumes:
-      - qdrant_storage:/qdrant/storage
+      - ./volumes/qdrant_storage:/qdrant/storage
 
   ollama-cpu:
     profiles: ["cpu"]
