@@ -80,7 +80,7 @@ services:
       - "-c"
       - "n8n import:credentials --separate --input=/demo-data/credentials && n8n import:workflow --separate --input=/demo-data/workflows"
     volumes:
-      - ./n8n/demo-data:/demo-data
+      - ./volumes/n8n/demo-data:/demo-data:rw
     depends_on:
       postgres:
         condition: service_healthy
@@ -94,9 +94,9 @@ services:
       - 5678:5678
     volumes:
       # - n8n_storage:/home/node/.n8n
-      - ./volumes/n8n/demo-data:/demo-data
-      - ./volumes/shared_n8n:/data/shared
-      - ./volumes/n8n_data:/home/node/.n8n
+      - ./volumes/n8n/demo-data:/demo-data:rw
+      - ./volumes/shared_n8n:/data/shared:rw
+      - ./volumes/n8n_data:/home/node/.n8n:rw
     depends_on:
       postgres:
         condition: service_healthy
